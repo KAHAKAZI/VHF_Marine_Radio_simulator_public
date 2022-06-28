@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>VHF Marine Radio</title>
+    </h:head>
+    <h:body>
+        <h:outputText id="title" style="font-size:40px;" value="VHF Marine Radio Simulator"/><br></br>
+        <h:form id="radio">
+            <p:growl id="messages" showDetail="false"/>
+            <p:remoteCommand name="recorderStopped" actionListener="#{radioManagedBean.recorderStopped()}" update="messages"/>
+            <p:remoteCommand name="recorderStarted" actionListener="#{radioManagedBean.recorderStarted()}" update="messages"/>
+            <p:remoteCommand name="showDscMessageForm" actionListener="#{radioManagedBean.showDscMessageForm()}" update="formmenu"/>
+            <p:remoteCommand name="showAckMessageForm" actionListener="#{radioManagedBean.showAckMessageForm()}" update="formmenu"/>
+            <p:remoteCommand name="showDscIndCallForm" actionListener="#{radioManagedBean.showDscIndCallForm()}" update="formmenu"/>
+            <p:panelGrid style="margin-top:20px; margin-left:60px;">
+                <p:row style="height: 20px; background-color: darkgray;">
+                    <p:column colspan="3"/>
+                </p:row>
+                <p:row>
+                    <p:column rowspan="3" style="background-color: darkgray;"/>
+                    <p:column rowspan="3" style="width:220px; height:200px; background-color:orange;">
+                        <p:outputPanel id="formmenu" rendered="true">
+                            <p:panelGrid id="outputboard" rendered="#{radioManagedBean.outputBoardForm}" styleClass="ui-noborder">
+                                <p:row style="background-color: orange;">
+                                    <p:column colspan="2">
+                                        <h:outputText id="time" value=""/><br></br>
+                                    </p:column>
+                                </p:row>
+                                <p:row style="background-color: orange;">
+                                    <p:column style="width:100px; height:100px;">
+                                        <h:outputText id="int" value="INT"/><br></br>
+                                        <h:outputText id="channelstatus" value=" "/><br></br>
+                                        <h:outputText id="channeltype" value=" "/><br></br>
+                                    </p:column>
+                                    <p:column style="width:100px;height: 100px;">
+                                        <h:outputText id="channeloutput" value="" style="font-size:100px;"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row style="background-color: orange;">
+                                    <p:column colspan="2" style="width:100px;height: 40px;">
+                                        <h:outputText id="latitude" value="#{radioManagedBean.latitude}"/><br></br>
+                                        <h:outputText id="longtitude" value="#{radioManagedBean.longitude}"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                            <p:slideMenu id="slidemenu" style="width:200px; background-color:orange; border-color: orange;" styleClass="ui-noborder" rendered="#{radioManagedBean.slideMenuForm}">
+                                <p:submenu label="Distress Call">
+                                    <p:menuitem id="undesignated" value="Undesignated" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Undesignated"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="fire" value="Fire, Explosion" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Fire, Explosion"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="flooding" value="Flooding" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Flooding"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="collision" value="Collision" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Collision"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="grounding" value="Grounding" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Grounding"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="capsizing" value="Capsizing" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Capsizing"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="sinking" value="Sinking" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Sinking"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="adrift" value="Adrift" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Adrift"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="abandoningship" value="Abandoning Ship" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Abandoning Ship"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="piracy" value="Piracy" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Piracy"/>
+                                    </p:menuitem>
+                                    <p:menuitem id="manoverboard" value="Man Overboard" action="#{radioManagedBean.showDistressForm()}" update="messages, formmenu">
+                                        <f:param name="action" value="Man Overboard"/>
+                                    </p:menuitem>
+                                </p:submenu>
+                                <p:submenu label="Allships Call" rendered="false">
+                                    <p:menuitem id="safety" value="Safety" action="#{radioManagedBean.showDistressForm()}" update="messages"/>
+                                    <p:menuitem id="urgency" value="Urgency" action="#{radioManagedBean.showDistressForm()}" update="messages"/>
+                                </p:submenu>
+                                <p:submenu label="Individual Call">
+                                    <p:menuitem value="Call" action="#{radioManagedBean.showIndividualCallForm()}" update="formmenu"/>
+                                </p:submenu>
+                                <p:submenu label="MMSI / GPS Info">
+                                    <p:menuitem value="MMSI" action="#{radioManagedBean.showMmsiForm}" update="messages, formmenu"/>
+                                    <p:menuitem value="GPS Position" action="#{radioManagedBean.showGpsForm}" update="messages, formmenu"/>
+                                </p:submenu>
+                            </p:slideMenu>
+                            <p:panelGrid id="distress" rendered="#{radioManagedBean.distressForm}" >
+                                <h:outputText id="dist" value="#{radioManagedBean.distressMessage}"/><br></br>
+                                <p:commandButton value="CANCEL" actionListener="#{radioManagedBean.cancel}" update="messages, formmenu" style="border-radius:12px; background-color:orange;" ajax="true"/>
+                                <p:commandButton value="SEND" actionListener="#{radioManagedBean.sendDistress}" update="messages, formmenu" style="border-radius:12px; background-color:orange;" ajax="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid id="dscmessage" rendered="#{radioManagedBean.dscMessageForm}" >
+                                <h:outputText id="dsc" value=""/><br></br>
+                                <p:commandButton value="IGN" actionListener="#{radioManagedBean.cancel}" update="messages, formmenu" style="border-radius:12px; background-color:orange;" ajax="true"/>
+                                <p:commandButton value="ACK" actionListener="#{radioManagedBean.sendAcknowledgement}" update="messages, formmenu" style="border-radius:12px; background-color:orange;" ajax="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid id="dscackmessage" rendered="#{radioManagedBean.dscAckMessageForm}" >
+                                <h:outputText id="dscack" value=""/><br></br>
+                                <p:commandButton value="OK" actionListener="#{radioManagedBean.updateMenuForm()}" update="messages, formmenu" style="border-radius:12px; background-color:orange;" ajax="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid id="mmsiform" rendered="#{radioManagedBean.mmsiForm}" >
+                                <h:outputText value="Your MMSI number:"/><br></br>
+                                <h:outputText id="mmsi" value=""/><br></br>
+                                <p:commandButton value="OK" actionListener="#{radioManagedBean.updateMenuForm()}" update="messages, formmenu" style="border-radius:12px; background-color:orange;" ajax="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid id="gpsform" rendered="#{radioManagedBean.gpsForm}" >
+                                <h:outputText value="Your position:"/><br></br>
+                                <h:outputText value="Latitude:"/><br></br>
+                                <h:outputText value="#{radioManagedBean.latitude}"/><br></br>
+                                <h:outputText value="Longitude:"/><br></br>
+                                <h:outputText value="#{radioManagedBean.longitude}"/><br></br>
+                                <p:commandButton value="OK" actionListener="#{radioManagedBean.updateMenuForm()}" update="messages, formmenu" style="border-radius:12px; background-color:orange;" ajax="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid id="individualcallform" rendered="#{radioManagedBean.individualCallForm}" >
+                                <h:outputText value="MMSI:"/><br></br>
+                                <p:inputText id="individualmmsi" value="#{radioManagedBean.individualCallMmsi}" required="true" label="MMSI" style="width:200px; background-color: orange;">
+                                    <f:validateLongRange minimum="261000000" maximum="261999999"/>
+                                    <f:validateLength minimum="9" maximum="9"/>
+                                </p:inputText><br></br>
+                                <h:outputText value="Channel:"/><br></br>
+                                <p:inputText id="individualchannel" value="#{radioManagedBean.individualCallChannel}" label="Channel" style="width:200px; background-color: orange;">
+                                    <f:validateBean />
+                                </p:inputText><br></br>
+                                <p:commandButton value="CANCEL" actionListener="#{radioManagedBean.cancel()}" immediate="true" update="messages, formmenu" style="border-radius:12px;  background-color:orange;" ajax="true"/>
+                                <p:commandButton value="SEND" actionListener="#{radioManagedBean.sendIndividualCall()}" update="messages, formmenu" style="border-radius:12px;  background-color:orange;" ajax="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid id="dscindcallform" rendered="#{radioManagedBean.dscIndCallForm}" >
+                                <h:outputText id="dscindcall" value=""/><br></br>
+                                <p:commandButton value="UNABLE TO COMPLY" actionListener="#{radioManagedBean.sendIndividualCallResponse()}" update="messages, formmenu" style="border-radius:12px; font-size:16px; width:215px; background-color:orange;" ajax="true">
+                                    <f:param name="indcallres" value="unable"/>
+                                </p:commandButton><br></br>
+                                <p:commandButton value="ABLE TO COMPLY" actionListener="#{radioManagedBean.sendIndividualCallResponse()}" update="messages, formmenu" style="border-radius:12px; font-size:16px; width:215px; background-color:orange;" ajax="true">
+                                    <f:param name="indcallres" value="able"/>
+                                </p:commandButton>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:column>
+                    <p:column style="background-color: darkgray;">
+                        <p:commandButton type="button" id="upbtn" value="CH +" style="border-radius: 12px; padding: 6px 12px; text-align: center;"/>
+                    </p:column>
+                </p:row>
+                <p:row style="background-color: darkgray;">
+                    <p:column>
+                        <p:commandButton type="button" id="downbtn" value="CH -" style="border-radius: 12px; padding: 6px 12px; text-align: center;"/>
+                    </p:column>
+                </p:row>
+                <p:row style="background-color: darkgray;">
+                    <p:column>
+                        <p:commandButton id="menubtn" value="MENU" update="formmenu" immediate="true" actionListener="#{radioManagedBean.updateMenuForm}" style="border-radius: 12px;" ajax="true"/>
+                    </p:column>
+                </p:row>
+                <p:row style="background-color: darkgray;">
+                    <p:column>
+                        <p:commandButton id="distressbtn" value="DISTRESS" immediate="true" action="#{radioManagedBean.showDistressForm()}" style="background-color: crimson; color: white; border-radius: 12px; font-size:16px;" update="formmenu"/>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton type="button" id="ch16" value="16" style="border-radius: 20px; font-size: 14px; float: right;"/>
+                    </p:column>
+                    <p:column colspan="3">
+                        <p:commandButton type="button" id="pttbtn" onclick="" value="PTT" style="border-radius: 12px;"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </h:form>
+    </h:body>
+    <script src="websocket.js"/>
+    <script src="recorder.js"/>
+    <script src="vhfradio.js"/>
+</html>
